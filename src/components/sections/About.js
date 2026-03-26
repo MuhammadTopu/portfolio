@@ -103,7 +103,7 @@ export function About() {
 
 if (loading) {
   return (
-    <article className={ARTICLE}>
+    <article className="active bg-card p-6 lg:p-8 transition-all duration-500 relative z-10 block animate-[fadeIn_0.4s_ease_forwards]">
       <header className="mb-8">
         <h2 className="text-4xl lg:text-5xl font-signature font-bold capitalize relative pb-3 text-foreground flex items-center gap-4">
           About me
@@ -116,18 +116,25 @@ if (loading) {
         {[1, 2, 3].map((_, i) => (
           <div
             key={i}
-            className="h-4 lg:h-5 bg-gray-700 rounded-md w-full animate-pulse"
+            className="h-4 lg:h-5 bg-gray-700 rounded-md w-full animate-pulse shadow-inner"
           />
         ))}
       </section>
 
-      {/* Services Skeleton */}
+      {/* Services Skeleton (cards like Resume projects/experience) */}
       <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
         {[1, 2].map((_, i) => (
           <div
             key={i}
-            className="h-40 bg-gray-700 rounded-lg animate-pulse"
-          />
+            className="bg-card rounded-lg p-6 flex flex-col gap-4 animate-pulse shadow-lg transform hover:scale-[1.02] transition-all duration-500"
+          >
+            <div className="w-12 h-12 bg-gray-600 rounded-full" /> {/* icon */}
+            <div className="space-y-2">
+              <div className="h-5 bg-gray-700 rounded w-3/4" /> {/* title */}
+              <div className="h-3 bg-gray-600 rounded w-full" /> {/* subtitle */}
+              <div className="h-3 bg-gray-600 rounded w-5/6" /> {/* description */}
+            </div>
+          </div>
         ))}
       </section>
 
@@ -136,7 +143,7 @@ if (loading) {
         {[1, 2, 3, 4].map((_, i) => (
           <div
             key={i}
-            className="h-10 bg-gray-700 rounded-md animate-pulse"
+            className="bg-card p-3 rounded-md h-10 animate-pulse shadow-inner"
           />
         ))}
       </section>
