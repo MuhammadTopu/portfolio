@@ -103,11 +103,11 @@ export function About() {
 
 if (loading) {
   return (
-    <article className="active bg-card p-6 lg:p-8 transition-all duration-500 relative z-10 block animate-[fadeIn_0.4s_ease_forwards]">
+    <article className="active bg-card/20 p-6 lg:p-8 transition-all duration-500 relative z-10 block animate-[fadeIn_0.4s_ease_forwards]">
       <header className="mb-8">
         <h2 className="text-4xl lg:text-5xl font-signature font-bold capitalize relative pb-3 text-foreground flex items-center gap-4">
           About me
-          <div className="w-[30px] h-[3px] bg-foreground mt-2 animate-pulse" />
+          <div className="w-[30px] h-[3px] bg-foreground/50 mt-2 animate-pulse" />
         </h2>
       </header>
 
@@ -116,23 +116,23 @@ if (loading) {
         {[1, 2, 3].map((_, i) => (
           <div
             key={i}
-            className="h-4 lg:h-5 bg-gray-700 rounded-md w-full animate-pulse shadow-inner"
+            className="h-4 lg:h-5 bg-foreground/10 rounded-md w-full animate-pulse shadow-inner"
           />
         ))}
       </section>
 
-      {/* Services Skeleton (cards like Resume projects/experience) */}
+      {/* Services Skeleton (cards like Resume) */}
       <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
         {[1, 2].map((_, i) => (
           <div
             key={i}
-            className="bg-card rounded-lg p-6 flex flex-col gap-4 animate-pulse shadow-lg transform hover:scale-[1.02] transition-all duration-500"
+            className="bg-card/20 rounded-lg p-6 flex flex-col gap-4 animate-pulse shadow-inner transform hover:scale-[1.02] transition-all duration-500"
           >
-            <div className="w-12 h-12 bg-gray-600 rounded-full" /> {/* icon */}
+            <div className="w-12 h-12 bg-foreground/20 rounded-full" /> {/* icon */}
             <div className="space-y-2">
-              <div className="h-5 bg-gray-700 rounded w-3/4" /> {/* title */}
-              <div className="h-3 bg-gray-600 rounded w-full" /> {/* subtitle */}
-              <div className="h-3 bg-gray-600 rounded w-5/6" /> {/* description */}
+              <div className="h-5 bg-foreground/20 rounded w-3/4" /> {/* title */}
+              <div className="h-3 bg-foreground/20 rounded w-full" /> {/* subtitle */}
+              <div className="h-3 bg-foreground/20 rounded w-5/6" /> {/* description */}
             </div>
           </div>
         ))}
@@ -143,7 +143,7 @@ if (loading) {
         {[1, 2, 3, 4].map((_, i) => (
           <div
             key={i}
-            className="bg-card p-3 rounded-md h-10 animate-pulse shadow-inner"
+            className="bg-card/20 p-3 rounded-md h-10 animate-pulse shadow-inner"
           />
         ))}
       </section>
