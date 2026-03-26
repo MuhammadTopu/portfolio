@@ -182,15 +182,12 @@ export function Blog() {
         <div className="space-y-8 animate-pulse">
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <li
-                key={i}
-                className="bg-card/20 rounded-lg overflow-hidden shadow-inner"
-              >
+              <li key={i} className="space-y-3">
                 {/* Image Skeleton */}
-                <div className="h-[160px] w-full bg-foreground/10" />
+                <div className="h-[160px] w-full bg-foreground/10 rounded-md" />
 
                 {/* Content */}
-                <div className="p-5 lg:p-6 space-y-3">
+                <div className="space-y-3 px-1">
                   {/* Meta */}
                   <div className="h-3 w-32 bg-foreground/10 rounded" />
 
