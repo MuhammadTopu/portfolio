@@ -16,15 +16,29 @@ const STATIC_PROJECTS = [
 export function Projects({ filter, setFilter }) {
   const [projects, setProjects] = useState(STATIC_PROJECTS);
 
-  useEffect(() => {
-    fetch("/api/projects")
-      .then((r) => r.json())
-      .then((j) => {
-        const items = j.data;
-        if (Array.isArray(items) && items.length) setProjects(items);
-      })
-      .catch(() => {});
-  }, []);
+
+useEffect(() => {
+  let isMounted = true;
+
+  fetch("/api/projects")
+    .then((r) => r.json())
+    .then((j) => {
+      if (!isMounted) return;
+      const items = j.data;
+      if (Array.isArray(items) && items.length) setProjects(items);
+    })
+    .catch(() => {});
+
+  // Fallback: after 3 seconds, show STATIC_PROJECTS if backend hasn't responded
+  const timeout = setTimeout(() => {
+    if (isMounted && (!projects || projects.length === 0)) setProjects(STATIC_PROJECTS);
+  }, 3000);
+
+  return () => {
+    isMounted = false;
+    clearTimeout(timeout);
+  };
+}, []);
 
   const categories = [
     "All",

@@ -54,24 +54,33 @@ const STATIC = {
 export function Resume() {
   const [data, setData] = useState(STATIC);
 
-  useEffect(() => {
-    fetch("/api/resume")
-      .then((r) => r.json())
-      .then((j) => {
-        if (j.data) {
-          setData({
-            projects: j.data.projects?.length
-              ? j.data.projects
-              : STATIC.projects,
-            experience: j.data.experience?.length
-              ? j.data.experience
-              : STATIC.experience,
-            skills: j.data.skills?.length ? j.data.skills : STATIC.skills,
-          });
-        }
-      })
-      .catch(() => {});
-  }, []);
+useEffect(() => {
+  let isMounted = true;
+
+  fetch("/api/resume")
+    .then((r) => r.json())
+    .then((j) => {
+      if (!isMounted) return;
+      if (j.data) {
+        setData({
+          projects: j.data.projects?.length ? j.data.projects : STATIC.projects,
+          experience: j.data.experience?.length ? j.data.experience : STATIC.experience,
+          skills: j.data.skills?.length ? j.data.skills : STATIC.skills,
+        });
+      }
+    })
+    .catch(() => {});
+
+  // Fallback: after 3 seconds, show STATIC if backend hasn't responded
+  const timeout = setTimeout(() => {
+    if (isMounted && !data) setData(STATIC);
+  }, 3000);
+
+  return () => {
+    isMounted = false;
+    clearTimeout(timeout);
+  };
+}, []);
 
   return (
     <article className={ARTICLE}>

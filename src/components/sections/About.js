@@ -69,16 +69,29 @@ const STATIC = {
 export function About() {
   const [data, setData] = useState(STATIC);
 
-  useEffect(() => {
-    fetch("/api/about")
-      .then((r) => r.json())
-      .then((j) => {
-        if (j.data && (j.data.bio?.length || j.data.services?.length)) {
-          setData({ ...STATIC, ...j.data });
-        }
-      })
-      .catch(() => {});
-  }, []);
+useEffect(() => {
+  let isMounted = true;
+
+  // Fetch backend data
+  fetch("/api/about")
+    .then((r) => r.json())
+    .then((j) => {
+      if (isMounted && j.data && (j.data.bio?.length || j.data.services?.length)) {
+        setData({ ...STATIC, ...j.data });
+      }
+    })
+    .catch(() => {});
+
+  // Fallback: after 3 seconds, show STATIC if backend hasn't responded
+  const timeout = setTimeout(() => {
+    if (isMounted && !data) setData(STATIC);
+  }, 3000);
+
+  return () => {
+    isMounted = false;
+    clearTimeout(timeout);
+  };
+}, []);
 
   return (
     <article className={ARTICLE}>

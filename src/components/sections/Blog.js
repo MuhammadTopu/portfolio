@@ -103,17 +103,31 @@ export function Blog() {
   const [selected, setSelected] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch('/api/blogs?limit=20')
-      .then(r => r.json())
-      .then(j => {
-        const items = j.data?.items ?? j.data;
-        if (Array.isArray(items) && items.length) setBlogs(items);
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, []);
+useEffect(() => {
+  let isMounted = true;
 
+  fetch("/api/blogs?limit=20")
+    .then((r) => r.json())
+    .then((j) => {
+      if (!isMounted) return;
+      const items = j.data?.items ?? j.data;
+      if (Array.isArray(items) && items.length) setBlogs(items);
+    })
+    .catch(() => {})
+    .finally(() => {
+      if (isMounted) setLoading(false);
+    });
+
+  // Fallback: after 3 seconds, show STATIC_BLOGS if backend hasn't responded
+  const timeout = setTimeout(() => {
+    if (isMounted && (!blogs || blogs.length === 0)) setBlogs(STATIC_BLOGS);
+  }, 3000);
+
+  return () => {
+    isMounted = false;
+    clearTimeout(timeout);
+  };
+}, []);
   if (selected !== null) {
     return <BlogDetail blog={blogs[selected]} onBack={() => setSelected(null)} />;
   }
