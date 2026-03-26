@@ -1,0 +1,5 @@
+/node_modules
+/old
+./next
+.next/
+.env.local
