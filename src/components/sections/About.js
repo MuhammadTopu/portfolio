@@ -101,9 +101,48 @@ export function About() {
   }, []);
 
 
-  if (loading) {
-      return <div>Loading...</div>;
-  }
+if (loading && !data) {
+  return (
+    <article className={ARTICLE}>
+      <header className="mb-8">
+        <h2 className="text-4xl lg:text-5xl font-signature font-bold capitalize relative pb-3 text-foreground flex items-center gap-4">
+          About me
+          <div className="w-[30px] h-[3px] bg-foreground mt-2 animate-pulse" />
+        </h2>
+      </header>
+
+      {/* Bio Skeleton */}
+      <section className="space-y-4 mb-12">
+        {[1, 2, 3].map((_, i) => (
+          <div
+            key={i}
+            className="h-4 lg:h-5 bg-gray-700 rounded-md w-full animate-pulse"
+          />
+        ))}
+      </section>
+
+      {/* Services Skeleton */}
+      <section className="mb-12 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[1, 2].map((_, i) => (
+          <div
+            key={i}
+            className="h-40 bg-gray-700 rounded-lg animate-pulse"
+          />
+        ))}
+      </section>
+
+      {/* Tech Stack Skeleton */}
+      <section className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        {[1, 2, 3, 4].map((_, i) => (
+          <div
+            key={i}
+            className="h-10 bg-gray-700 rounded-md animate-pulse"
+          />
+        ))}
+      </section>
+    </article>
+  );
+}
 
   return (
     <article className={ARTICLE}>
