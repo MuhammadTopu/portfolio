@@ -6,11 +6,12 @@ import { Btn, Field, Input, Textarea, useToast } from '@/components/admin/ui';
 
 // Controlled input that lets you type freely (with spaces) and only parses on blur
 function SkillTagsInput({ value, onChange, placeholder }) {
-  const [raw, setRaw] = useState(value.join(', '));
+  const safeValue = Array.isArray(value) ? value : [];
+  const [raw, setRaw] = useState(safeValue.join(', '));
 
   // Sync if parent resets (e.g. on load)
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { setRaw(value.join(', ')); }, [value.join(',')]);
+  useEffect(() => { setRaw(safeValue.join(', ')); }, [safeValue.join(',')]);
 
   return (
     <Input
@@ -48,7 +49,19 @@ export default function AdminResumePage() {
 
   useEffect(() => {
     fetch('/api/resume').then(r => r.json()).then(j => {
-      if (j.data) setDataSync(j.data);
+      if (j.data) {
+        const incoming = j.data;
+        const normalized = {
+          ...DEFAULT_RESUME,
+          ...incoming,
+          experience: Array.isArray(incoming.experience) ? incoming.experience : DEFAULT_RESUME.experience,
+          infraProjects: Array.isArray(incoming.infraProjects)
+            ? incoming.infraProjects
+            : (Array.isArray(incoming.projects) ? incoming.projects : DEFAULT_RESUME.infraProjects),
+          skills: Array.isArray(incoming.skills) ? incoming.skills : DEFAULT_RESUME.skills,
+        };
+        setDataSync(normalized);
+      }
       setLoading(false);
     });
   }, []);
@@ -86,7 +99,8 @@ export default function AdminResumePage() {
 
   // Delete an item from a list key, persist immediately
   const deleteItem = (key, i) => {
-    const next = { ...dataRef.current, [key]: dataRef.current[key].filter((_, j) => j !== i) };
+    const list = Array.isArray(dataRef.current[key]) ? dataRef.current[key] : [];
+    const next = { ...dataRef.current, [key]: list.filter((_, j) => j !== i) };
     setDataSync(next);
     save(next);
   };
@@ -127,7 +141,7 @@ export default function AdminResumePage() {
       {/* Experience */}
       <section className="bg-card border-2 border-dashed border-card-border p-6 space-y-6">
         <h2 className="font-signature font-bold text-lg text-foreground border-b border-dashed border-card-border pb-2">Work Experience</h2>
-        {data.experience.map((exp, i) => (
+        {(Array.isArray(data.experience) ? data.experience : []).map((exp, i) => (
           <div key={i} className="border border-dashed border-card-border p-4 space-y-3 relative">
             <button type="button" onClick={() => deleteItem('experience', i)} className="absolute top-3 right-3 text-muted hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -137,18 +151,18 @@ export default function AdminResumePage() {
             </div>
             <Field label="Bullet Points">
               <div className="space-y-2">
-                {exp.points.map((pt, pi) => (
+                {(Array.isArray(exp.points) ? exp.points : []).map((pt, pi) => (
                   <div key={pi} className="flex gap-2">
                     <Input value={pt} onChange={e => setPoint(i, pi, e.target.value)} placeholder={`Point ${pi + 1}`} className="flex-1" />
                     <button type="button" onClick={() => setExp(i, 'points', exp.points.filter((_, j) => j !== pi))} className="text-muted hover:text-red-500 transition-colors shrink-0"><Trash2 size={14} /></button>
                   </div>
                 ))}
-                <Btn variant="ghost" onClick={() => setExp(i, 'points', [...exp.points, ''])}><Plus size={12} /> Add Point</Btn>
+                <Btn variant="ghost" onClick={() => setExp(i, 'points', [...(Array.isArray(exp.points) ? exp.points : []), ''])}><Plus size={12} /> Add Point</Btn>
               </div>
             </Field>
           </div>
         ))}
-        <Btn variant="ghost" onClick={() => setDataSync({ ...dataRef.current, experience: [...dataRef.current.experience, { title: '', company: '', period: '', points: [''] }] })}>
+        <Btn variant="ghost" onClick={() => setDataSync({ ...dataRef.current, experience: [...(Array.isArray(dataRef.current.experience) ? dataRef.current.experience : []), { title: '', company: '', period: '', points: [''] }] })}>
           <Plus size={14} /> Add Experience
         </Btn>
       </section>
@@ -156,7 +170,7 @@ export default function AdminResumePage() {
       {/* Infra Projects */}
       <section className="bg-card border-2 border-dashed border-card-border p-6 space-y-4">
         <h2 className="font-signature font-bold text-lg text-foreground border-b border-dashed border-card-border pb-2">Projects</h2>
-        {data.infraProjects.map((proj, i) => (
+        {(Array.isArray(data.infraProjects) ? data.infraProjects : []).map((proj, i) => (
           <div key={i} className="border border-dashed border-card-border p-4 space-y-3 relative">
             <button type="button" onClick={() => deleteItem('infraProjects', i)} className="absolute top-3 right-3 text-muted hover:text-red-500 transition-colors"><Trash2 size={14} /></button>
             <div className="grid grid-cols-2 gap-3">
@@ -167,7 +181,7 @@ export default function AdminResumePage() {
             <Field label="Description"><Textarea value={proj.text} rows={2} onChange={e => setProj(i, 'text', e.target.value)} /></Field>
           </div>
         ))}
-        <Btn variant="ghost" onClick={() => setDataSync({ ...dataRef.current, infraProjects: [...dataRef.current.infraProjects, { title: '', period: '', text: '', tools: '' }] })}>
+        <Btn variant="ghost" onClick={() => setDataSync({ ...dataRef.current, infraProjects: [...(Array.isArray(dataRef.current.infraProjects) ? dataRef.current.infraProjects : []), { title: '', period: '', text: '', tools: '' }] })}>
           <Plus size={14} /> Add Project
         </Btn>
       </section>
@@ -175,7 +189,7 @@ export default function AdminResumePage() {
       {/* Skills */}
       <section className="bg-card border-2 border-dashed border-card-border p-6 space-y-4">
         <h2 className="font-signature font-bold text-lg text-foreground border-b border-dashed border-card-border pb-2">Skills</h2>
-        {data.skills.map((group, i) => (
+        {(Array.isArray(data.skills) ? data.skills : []).map((group, i) => (
           <div key={i} className="grid grid-cols-[160px_1fr_auto] gap-3 items-end">
             <Field label={i === 0 ? 'Category' : undefined}>
               <Input value={group.category} onChange={e => setSkill(i, 'category', e.target.value)} placeholder="e.g. Languages" />
@@ -190,7 +204,7 @@ export default function AdminResumePage() {
             <button type="button" onClick={() => deleteItem('skills', i)} className="text-muted hover:text-red-500 transition-colors mb-2 shrink-0"><Trash2 size={14} /></button>
           </div>
         ))}
-        <Btn variant="ghost" onClick={() => setDataSync({ ...dataRef.current, skills: [...dataRef.current.skills, { category: '', tags: [] }] })}>
+        <Btn variant="ghost" onClick={() => setDataSync({ ...dataRef.current, skills: [...(Array.isArray(dataRef.current.skills) ? dataRef.current.skills : []), { category: '', tags: [] }] })}>
           <Plus size={14} /> Add Skill Group
         </Btn>
       </section>
