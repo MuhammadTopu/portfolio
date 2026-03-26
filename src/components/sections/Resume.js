@@ -53,34 +53,62 @@ const STATIC = {
 
 export function Resume() {
   const [data, setData] = useState(STATIC);
+  const [loading, setLoading] = useState(true);
 
-useEffect(() => {
-  let isMounted = true;
+  useEffect(() => {
+    let isMounted = true;
 
-  fetch("/api/resume")
-    .then((r) => r.json())
-    .then((j) => {
-      if (!isMounted) return;
-      if (j.data) {
-        setData({
-          projects: j.data.projects?.length ? j.data.projects : STATIC.projects,
-          experience: j.data.experience?.length ? j.data.experience : STATIC.experience,
-          skills: j.data.skills?.length ? j.data.skills : STATIC.skills,
-        });
-      }
-    })
-    .catch(() => {});
+    fetch("/api/resume")
+      .then((r) => r.json())
+      .then((j) => {
+        if (!isMounted) return;
+        if (j.data) {
+          setData({
+            projects: j.data.projects?.length ? j.data.projects : STATIC.projects,
+            experience: j.data.experience?.length ? j.data.experience : STATIC.experience,
+            skills: j.data.skills?.length ? j.data.skills : STATIC.skills,
+          });
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
-  // Fallback: after 3 seconds, show STATIC if backend hasn't responded
-  const timeout = setTimeout(() => {
-    if (isMounted && !data) setData(STATIC);
-  }, 3000);
+    // Optional fallback: show STATIC if backend takes too long
+    const timeout = setTimeout(() => {
+      if (isMounted && !data) setData(STATIC);
+    }, 3000);
 
-  return () => {
-    isMounted = false;
-    clearTimeout(timeout);
-  };
-}, []);
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <article className="space-y-8 animate-pulse">
+        <div className="h-8 w-48 bg-gray-700 rounded-md" /> {/* header */}
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-4 bg-gray-700 rounded-md w-full" /> // bio skeleton
+          ))}
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          {[1, 2].map((i) => (
+            <div key={i} className="h-40 bg-gray-700 rounded-lg" /> // service/project cards skeleton
+          ))}
+        </div>
+        <div className="space-y-2 mt-6">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-6 bg-gray-700 rounded-md w-3/4" /> // skills skeleton
+          ))}
+        </div>
+      </article>
+    );
+  }
+
 
   return (
     <article className={ARTICLE}>
