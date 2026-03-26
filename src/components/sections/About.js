@@ -68,8 +68,9 @@ const STATIC = {
 
 export function About() {
   const [data, setData] = useState(STATIC);
+  const [loading, setLoading] = useState(true);
 
- useEffect(() => {
+  useEffect(() => {
     let isMounted = true;
 
     fetch("/api/about")
@@ -78,20 +79,20 @@ export function About() {
         if (!isMounted) return;
 
         if (j.data && (j.data.bio?.length || j.data.services?.length)) {
-          setData({ ...STATIC, ...j.data }); // merge backend with static defaults
+          setData({ ...STATIC, ...j.data }); // merge backend with static
         }
       })
       .catch(() => {
-        // optional: log or handle errors
+        // optional: handle error
       })
       .finally(() => {
-        if (isMounted) setLoading(false);
+        if (isMounted) setLoading(false); // ✅ safe because setLoading exists
       });
 
-    // Fallback: show STATIC after 5s only if data is still null
+    // fallback: after 3s, show STATIC if data hasn't arrived
     const timeout = setTimeout(() => {
       if (isMounted && !data) setData(STATIC);
-    }, 5000);
+    }, 3000);
 
     return () => {
       isMounted = false;
@@ -99,21 +100,10 @@ export function About() {
     };
   }, []);
 
-  if (loading && !data) {
-    return <div>Loading...</div>; // skeleton or spinner while fetching
-  }
 
-  return (
-    <div>
-      <h2>About</h2>
-      <p>{data?.bio}</p>
-      <ul>
-        {data?.services?.map((s, i) => (
-          <li key={i}>{s}</li>
-        ))}
-      </ul>
-    </div>
-  );
+  if (loading) {
+      return <div>Loading...</div>;
+  }
 
   return (
     <article className={ARTICLE}>
