@@ -93,8 +93,7 @@ export function Sidebar() {
   return (
     <>
       <aside
-        className={`bg-sidebar border-2  border-card-border sketch-border p-4 lg:p-6 transition-[max-height] duration-500 ease-in-out relative z-10 lg:sticky lg:top-[120px] lg:mb-0 lg:w-[280px] lg:shrink-0 lg:flex lg:flex-col lg:justify-center lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto custom-scrollbar overflow-hidden ${isActive ? "max-h-[800px]" : "max-h-[110px]"}`}
-      >
+        className={`bg-sidebar border-2 border-card-border sketch-border paper-pattern p-4 lg:p-6 transition-[max-height] duration-500 ease-in-out relative z-10 lg:sticky lg:top-[60px] lg:mb-0 lg:w-[280px] lg:shrink-0 lg:flex lg:flex-col lg:justify-center lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto custom-scrollbar overflow-hidden ${isActive ? 'max-h-[800px]' : 'max-h-[110px]'}`}>
         {/* Top info */}
         <div className="sidebar-info flex items-center gap-[20px] relative lg:block lg:text-center">
           <div className="relative w-[70px] h-[70px] lg:w-[130px] lg:h-[130px] lg:mx-auto">
