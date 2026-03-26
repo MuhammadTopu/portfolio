@@ -101,7 +101,7 @@ export function About() {
   }, []);
 
 
-if (loading && !data) {
+if (loading) {
   return (
     <article className={ARTICLE}>
       <header className="mb-8">
