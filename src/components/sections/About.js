@@ -69,29 +69,51 @@ const STATIC = {
 export function About() {
   const [data, setData] = useState(STATIC);
 
-useEffect(() => {
-  let isMounted = true;
+ useEffect(() => {
+    let isMounted = true;
 
-  // Fetch backend data
-  fetch("/api/about")
-    .then((r) => r.json())
-    .then((j) => {
-      if (isMounted && j.data && (j.data.bio?.length || j.data.services?.length)) {
-        setData({ ...STATIC, ...j.data });
-      }
-    })
-    .catch(() => {});
+    fetch("/api/about")
+      .then((r) => r.json())
+      .then((j) => {
+        if (!isMounted) return;
 
-  // Fallback: after 3 seconds, show STATIC if backend hasn't responded
-  const timeout = setTimeout(() => {
-    if (isMounted && !data) setData(STATIC);
-  }, 3000);
+        if (j.data && (j.data.bio?.length || j.data.services?.length)) {
+          setData({ ...STATIC, ...j.data }); // merge backend with static defaults
+        }
+      })
+      .catch(() => {
+        // optional: log or handle errors
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false);
+      });
 
-  return () => {
-    isMounted = false;
-    clearTimeout(timeout);
-  };
-}, []);
+    // Fallback: show STATIC after 5s only if data is still null
+    const timeout = setTimeout(() => {
+      if (isMounted && !data) setData(STATIC);
+    }, 5000);
+
+    return () => {
+      isMounted = false;
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  if (loading && !data) {
+    return <div>Loading...</div>; // skeleton or spinner while fetching
+  }
+
+  return (
+    <div>
+      <h2>About</h2>
+      <p>{data?.bio}</p>
+      <ul>
+        {data?.services?.map((s, i) => (
+          <li key={i}>{s}</li>
+        ))}
+      </ul>
+    </div>
+  );
 
   return (
     <article className={ARTICLE}>
