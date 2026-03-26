@@ -180,10 +180,12 @@ export function Blog() {
 
       {loading ? (
         <div className="space-y-8 animate-pulse">
-          {/* Grid Skeleton */}
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {[1, 2, 3, 4].map((i) => (
-              <li key={i} className="bg-card/20 rounded-lg overflow-hidden p-0">
+              <li
+                key={i}
+                className="bg-card/20 rounded-lg overflow-hidden shadow-inner"
+              >
                 {/* Image Skeleton */}
                 <div className="h-[160px] w-full bg-foreground/10" />
 
