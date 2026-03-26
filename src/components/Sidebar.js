@@ -120,7 +120,7 @@ export function Sidebar() {
           </div>
 
           <button
-            className="info_more-btn absolute bottom-4 right-4 lg:bottom-8 lg:right-8 text-xs text-muted font-bold tracking-widest uppercase"
+            className="info_more-btn absolute bottom-4 right-4 lg:bottom-8 lg:right-8 text-xs text-muted font-bold tracking-widest uppercase lg:hidden"
             onClick={() => setIsActive(!isActive)}
           >
             <span>{isActive ? "Show less" : "Show more"}</span>
