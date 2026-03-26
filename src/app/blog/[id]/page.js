@@ -137,7 +137,7 @@ export default async function BlogPostPage({ params }) {
             <figure className="relative sketch-border overflow-hidden mb-8 aspect-[2/1] -mx-6 lg:-mx-10 -mt-6 lg:-mt-10">
               <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
               <div className="absolute top-4 left-4 flex items-center gap-2 bg-foreground px-3 py-1 sketch-border text-xs font-bold text-background">
-                <PenTool size={14} /> {blog.category}
+                {blog.category}
               </div>
             </figure>
           )}
