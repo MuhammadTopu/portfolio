@@ -86,28 +86,56 @@ export function Resume() {
     };
   }, []);
 
-  if (loading) {
-    return (
-      <article className="space-y-8 animate-pulse">
-        <div className="h-8 w-48 bg-gray-700 rounded-md" /> {/* header */}
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-4 bg-gray-700 rounded-md w-full" /> // bio skeleton
-          ))}
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-          {[1, 2].map((i) => (
-            <div key={i} className="h-40 bg-gray-700 rounded-lg" /> // service/project cards skeleton
-          ))}
-        </div>
-        <div className="space-y-2 mt-6">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-6 bg-gray-700 rounded-md w-3/4" /> // skills skeleton
-          ))}
-        </div>
-      </article>
-    );
-  }
+if (loading) {
+  return (
+    <article className="space-y-8 animate-pulse bg-card/20 p-6 lg:p-8 rounded-lg">
+      {/* Header */}
+      <header className="mb-8">
+        <h2 className="text-4xl lg:text-5xl font-signature font-bold capitalize relative pb-3 text-foreground flex items-center gap-4">
+          Resume
+          <div className="w-[30px] h-[3px] bg-foreground/30 mt-2" />
+        </h2>
+      </header>
+
+      {/* Bio / intro lines */}
+      <div className="space-y-4">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="h-4 bg-foreground/10 rounded-md w-full"
+          />
+        ))}
+      </div>
+
+      {/* Cards (Experience / Projects style) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        {[1, 2].map((i) => (
+          <div
+            key={i}
+            className="bg-card/20 p-6 rounded-lg flex flex-col gap-4 shadow-inner"
+          >
+            <div className="w-12 h-12 bg-foreground/20 rounded-full" />
+            <div className="space-y-2">
+              <div className="h-5 bg-foreground/20 rounded w-3/4" />
+              <div className="h-3 bg-foreground/10 rounded w-full" />
+              <div className="h-3 bg-foreground/10 rounded w-5/6" />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Skills */}
+      <div className="space-y-2 mt-6">
+        {[1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className="h-6 bg-foreground/10 rounded-md w-3/4"
+          />
+        ))}
+      </div>
+    </article>
+  );
+}
 
 
   return (
